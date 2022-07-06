@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rbPlayer;
     private Animator animPlayer;
+    private SpriteRenderer playerS;
+    public float health;
+    public bool invunreable;
     public float forcaPulo;
 
     public LayerMask eChao;
@@ -19,12 +23,14 @@ public class PlayerController : MonoBehaviour
     public LayerMask eInimigo;
 
     public int pontuacao;
+    public AudioClip ataqueSom;
 
     // Start is called before the first frame update
     void Start()
     {
         rbPlayer = GetComponent<Rigidbody2D>();
         animPlayer = GetComponent<Animator>();
+        playerS = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -35,6 +41,11 @@ public class PlayerController : MonoBehaviour
         InputPlayer();
         AnimationFrog();
         ProximoAtaque();
+
+        if(Input.GetKeyDown(KeyCode.M))
+        {
+            DamagePlayer(1);
+        }
     }
 
     void InputPlayer()
@@ -54,9 +65,10 @@ public class PlayerController : MonoBehaviour
 
     void Ataque()
     {
-        
-            animPlayer.SetTrigger("Attack");
-            proximoAtaque = 0.2f;
+
+        animPlayer.SetTrigger("Attack");
+        AudioManager.inst.AudioPlay(ataqueSom);
+        proximoAtaque = 0.2f;
 
     }
 
@@ -79,49 +91,50 @@ public class PlayerController : MonoBehaviour
             if (estaAtacando[i].CompareTag("Enemy"))
             {
                 EnemyController enemy = estaAtacando[i].GetComponent<EnemyController>();
-               
+
 
                 if (enemy != null)
                 {
-                    enemy.DamageEnemy(1);
-                    print("morte inimigo");
+                    pontuacao++;
+                    enemy.MorteInimigo();
+                   
                 }
             }
 
         }
     }
 
-    //public void DamagePlayer(float dano)
-    //{
-    //    if (health > 0)
-    //    {
+    public void DamagePlayer(float dano)
+    {
+        if (health > 0)
+        {
 
-    //        invunreable = true;
-    //        StartCoroutine(Damage());
-    //        health -= dano;
-
-
-    //        if (health < 1)
-    //        {
-    //            Invoke("ReloadLevel", 3f);
-    //        }
-    //    }
-    //}
-    //void ReloadLevel()
-    //{
-    //    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    //}
-    //IEnumerator Damage()
-    //{
-    //    for (float i = 0f; i < 1f; i += 0.2f)
-    //    {
-    //        playerS.enabled = false;
-    //        yield return new WaitForSeconds(0.1f);
-    //        playerS.enabled = true;
-    //        yield return new WaitForSeconds(0.1f);
-    //    }
-    //    invunreable = false;
-    //}
+            invunreable = true;
+            StartCoroutine(Damage());
+            health -= dano;
+            if (health < 1)
+            {
+                Invoke("ReloadLevel", 3f);
+            }
+        }
+    }
+    void ReloadLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    IEnumerator Damage()
+    {
+        for (float i = 0f; i < 1f; i += 0.2f)
+        {
+           // playerS.enabled = false;
+            playerS.color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            //playerS.enabled = true;
+            playerS.color = Color.white;
+            yield return new WaitForSeconds(0.1f);
+        }
+        invunreable = false;
+    }
     void AnimationFrog()
     {
         animPlayer.SetBool("Run", estaNoChao);
@@ -133,5 +146,14 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(verificaChao.position, raioChao);
         Gizmos.DrawWireSphere(verificaAtaque.position, raioAtaque);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            DamagePlayer(1);
+
+        }
     }
 }

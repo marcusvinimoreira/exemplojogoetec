@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8781516141711424487}
   - component: {fileID: 6964331121006428201}
   - component: {fileID: 1484896098821785727}
+  - component: {fileID: 7891434817755378088}
   m_Layer: 9
   m_Name: Inimigo
   m_TagString: Enemy
@@ -52,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 6d56b1a97739cd74d8b7b425c3f39756, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -155,3 +156,19 @@ MonoBehaviour:
   player: {fileID: 4438224148445415231, guid: 87cf99958e1275e41aca8fd4329893f8, type: 3}
   inimgioMorte: {fileID: 3817472309352711993, guid: fc2753588ea23f24298717b7e7252855,
     type: 3}
+--- !u!70 &7891434817755378088
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5642991656011884264}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 2.75, y: 3.25}
+  m_Direction: 0

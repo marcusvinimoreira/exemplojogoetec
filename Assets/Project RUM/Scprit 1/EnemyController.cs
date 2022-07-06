@@ -7,7 +7,7 @@ public class EnemyController : MonoBehaviour
     public float velocidade = 3.5f;
     public PlayerController player;
     public GameObject inimgioMorte;
-    private int vidaInimigo=1;
+    private int vidaInimigo = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -20,18 +20,18 @@ public class EnemyController : MonoBehaviour
     {
         this.transform.Translate(new Vector2(-velocidade * Time.deltaTime, 0));
 
-        //if (this.transform.position.x <= -7)
-        //{
-        //    Destroy(this.gameObject);
-        //}
-        if(vidaInimigo<=0)
+        if (this.transform.position.x <= -7)
+        {
+            MorteInimigo();
+        }
+        if (vidaInimigo <= 0)
         {
             MorteInimigo();
         }
 
 
     }
-    void MorteInimigo()
+   public void MorteInimigo()
     {
         Instantiate(inimgioMorte, transform.position, Quaternion.identity);
         Destroy(this.gameObject);
@@ -41,11 +41,14 @@ public class EnemyController : MonoBehaviour
     {
         vidaInimigo--;
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+
             MorteInimigo();
         }
     }
+  
 }
